@@ -74,7 +74,7 @@ Two-process Tauri model:
 - **Rust backend** (`src-tauri/src/`) — owns the serial port, streams G-code, emits status events
 - **React frontend** (`src/`) — renders UI, slices SVG to G-code, sends commands via Tauri IPC
 
-See [`CLAUDE.md`](CLAUDE.md) for detailed architecture notes.
+See the source code for detailed architecture notes.
 
 ## Developers
 
