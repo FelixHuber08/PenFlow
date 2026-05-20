@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+
+  --color-surface: #f7f7f5;
+  --color-border: #e9e9e7;
+  --color-muted: #9b9b98;
+  --color-ink: #37352f;
+  --color-ink-2: #787774;
+
+  --color-green: #0f9d58;
+  --color-red: #db4437;
+  --color-amber: #f59e0b;
+  --color-blue: #3b82f6;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background: white;
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #d1d0ce;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: #b7b5b2; }
+
+/* macOS title bar drag region */
+.drag-region {
+  -webkit-app-region: drag;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
+}
