@@ -76,6 +76,11 @@ Two-process Tauri model:
 
 See [`CLAUDE.md`](CLAUDE.md) for detailed architecture notes.
 
+## Developers
+
+- Felix Huber
+- Bennet Unger
+
 ## License
 
 MIT
