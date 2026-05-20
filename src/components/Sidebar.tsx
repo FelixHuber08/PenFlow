@@ -1,4 +1,4 @@
-import { Crosshair, Scissors, Settings } from "lucide-react";
+import { Home, Crosshair, Scissors, Settings } from "lucide-react";
 import { View } from "../lib/types";
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 }
 
 const items: { id: View; label: string; Icon: typeof Crosshair }[] = [
+  { id: "home",    label: "Home",    Icon: Home },
   { id: "control", label: "Control", Icon: Crosshair },
   { id: "slicer",  label: "Slicer",  Icon: Scissors },
   { id: "settings",label: "Settings",Icon: Settings },

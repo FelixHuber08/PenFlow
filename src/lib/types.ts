@@ -38,7 +38,7 @@ export interface SvgTransform {
   rotation: number; // degrees (0 or 90 for now)
 }
 
-export type View = "control" | "slicer" | "settings";
+export type View = "home" | "control" | "slicer" | "settings";
 
 export type MachineState =
   | "Disconnected"

@@ -10,6 +10,7 @@ import {
 import { onStatus, onLine, onJobProgress, onJobDone, onJobError, onDisconnected } from "./lib/grbl";
 import Sidebar from "./components/Sidebar";
 import ConnectionBar from "./components/ConnectionBar";
+import HomeView, { pushRecentFile } from "./views/HomeView";
 import ControlView from "./views/ControlView";
 import SlicerView from "./views/SlicerView";
 import SettingsView from "./views/SettingsView";
@@ -33,7 +34,8 @@ function loadFromStorage<T>(key: string, fallback: T): T {
 }
 
 export default function App() {
-  const [view, setView] = useState<View>("control");
+  const [view, setView] = useState<View>("home");
+  const [pendingSvg, setPendingSvg] = useState<{ content: string; name: string } | null>(null);
   const [status, setStatus] = useState<MachineStatus>(DEFAULT_STATUS);
   const [consoleLines, setConsoleLines] = useState<string[]>([
     "Pen Plotter ready. Connect to start.",
@@ -84,6 +86,12 @@ export default function App() {
     return () => { unsubs.forEach((p) => p.then((fn) => fn())); };
   }, [addLine]);
 
+  const handleOpenSvg = (content: string, name: string, filePath: string) => {
+    pushRecentFile(name, filePath);
+    setPendingSvg({ content, name });
+    setView("slicer");
+  };
+
   const handleConnect = () => {
     setStatus((s) => ({ ...s, connected: true, state: "Connected" }));
     addLine("Connected to machine");
@@ -111,7 +119,15 @@ export default function App() {
           onError={(message) => addLine(`[connection] ${message}`)}
         />
 
-        <main className="flex-1 overflow-hidden">
+        <main className="flex-1 overflow-hidden flex">
+          {view === "home" && (
+            <HomeView
+              status={status}
+              penSlots={penSlots}
+              onOpenSvg={handleOpenSvg}
+              onNavigate={setView}
+            />
+          )}
           {view === "control" && (
             <ControlView
               status={status}
@@ -127,6 +143,8 @@ export default function App() {
               onMessage={(message) => addLine(`[slicer] ${message}`)}
               penSlots={penSlots}
               penChange={penChange}
+              initialSvg={pendingSvg}
+              onInitialSvgConsumed={() => setPendingSvg(null)}
             />
           )}
           {view === "settings" && (

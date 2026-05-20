@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Upload, Play, FileCode, Clock, Layers, RefreshCw, ArrowLeft, Printer
 } from "lucide-react";
@@ -34,6 +34,8 @@ interface Props {
   onMessage: (message: string) => void;
   penSlots?: PenSlot[];
   penChange?: PenChangeConfig;
+  initialSvg?: { content: string; name: string } | null;
+  onInitialSvgConsumed?: () => void;
 }
 
 const DEFAULT_CONFIG: PlotConfig = {
@@ -58,7 +60,7 @@ const DEFAULT_RASTER: RasterConfig = {
 type SliceMode = "auto" | "vector" | "raster";
 type ScreenMode = "edit" | "print";
 
-export default function SlicerView({ connected, jobProgress, onMessage, penSlots: propSlots, penChange: propChange }: Props) {
+export default function SlicerView({ connected, jobProgress, onMessage, penSlots: propSlots, penChange: propChange, initialSvg, onInitialSvgConsumed }: Props) {
   const penSlots = propSlots ?? DEFAULT_PEN_SLOTS;
   const penChange = propChange ?? DEFAULT_PEN_CHANGE;
 
@@ -77,6 +79,21 @@ export default function SlicerView({ connected, jobProgress, onMessage, penSlots
   const [sending, setSending] = useState(false);
   const [fileName, setFileName] = useState<string>("");
   const [screenMode, setScreenMode] = useState<ScreenMode>("edit");
+
+  useEffect(() => {
+    if (!initialSvg) return;
+    const dims = getSvgDimensions(initialSvg.content);
+    setSvgString(initialSvg.content);
+    setSvgDims(dims);
+    setFileName(initialSvg.name);
+    setGcode(null);
+    setEstTime(null);
+    setScreenMode("edit");
+    const autoScale = (190 / (dims.w || 100)) * dims.w;
+    setTransform({ ...DEFAULT_TRANSFORM, scale: autoScale });
+    onMessage(`Loaded ${initialSvg.name}`);
+    onInitialSvgConsumed?.();
+  }, [initialSvg]);
 
   const importSvg = async () => {
     try {
