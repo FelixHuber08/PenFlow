@@ -1,4 +1,4 @@
-import { Crosshair, Scissors, Settings, Activity } from "lucide-react";
+import { Crosshair, Scissors, Settings } from "lucide-react";
 import { View } from "../lib/types";
 
 interface Props {
@@ -35,10 +35,10 @@ export default function Sidebar({ active, onChange, connected, machineState }: P
 
       {/* Logo / title */}
       <div className="px-4 pb-4 no-drag">
-        <div className="flex items-center gap-2">
-          <Activity size={18} className="text-[#37352f]" />
+        <div className="flex items-center gap-2.5">
+          <img src="/Logo.png" alt="PenFlow" className="w-6 h-6 rounded-md object-contain" />
           <span className="text-[13px] font-semibold text-[#37352f] tracking-tight">
-            Pen Plotter
+            PenFlow
           </span>
         </div>
       </div>
