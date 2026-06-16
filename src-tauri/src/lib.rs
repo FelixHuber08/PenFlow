@@ -31,10 +31,20 @@ fn disconnect(state: State<AppState>) {
 
 #[tauri::command]
 fn send_command(cmd: String, state: State<AppState>, app: AppHandle) -> Result<(), String> {
+    let grbl = state.grbl.lock().unwrap();
+    // Safety: while a job streams, the reader thread advances on every `ok`.
+    // A manual line command injects an extra `ok` (skipping a real drawing line),
+    // and GRBL rejects `$`/G-code settings while moving anyway. Only real-time
+    // control bytes (pause/resume/stop/status/jog-cancel/overrides) are allowed.
+    if grbl.is_job_running() && !grbl::is_realtime_cmd(&cmd) {
+        return Err(
+            "Befehl blockiert: Während eines laufenden Jobs sind nur Echtzeit-Befehle (Pause, Stop, Status) erlaubt."
+                .into(),
+        );
+    }
     for line in cmd.lines().map(str::trim).filter(|line| !line.is_empty()) {
         let _ = app.emit("grbl-line", format!("> {}", line));
     }
-    let grbl = state.grbl.lock().unwrap();
     grbl.send_raw(&cmd)
 }
 

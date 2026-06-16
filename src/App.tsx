@@ -7,7 +7,7 @@ import {
   PenSlot,
   View,
 } from "./lib/types";
-import { onStatus, onLine, onJobProgress, onJobDone, onJobError, onDisconnected } from "./lib/grbl";
+import { onStatus, onLine, onJobProgress, onJobDone, onJobError, onJobStopped, onDisconnected } from "./lib/grbl";
 import Sidebar from "./components/Sidebar";
 import ConnectionBar from "./components/ConnectionBar";
 import HomeView, { pushRecentFile } from "./views/HomeView";
@@ -73,6 +73,10 @@ export default function App() {
         addLine("✓ Job complete");
         setJobProgress(null);
       }),
+      onJobStopped(() => {
+        addLine("⏹ Job gestoppt");
+        setJobProgress(null);
+      }),
       onJobError((msg) => {
         addLine(`✗ Job error: ${msg}`);
         setJobProgress(null);
@@ -119,7 +123,7 @@ export default function App() {
           onError={(message) => addLine(`[connection] ${message}`)}
         />
 
-        <main className="flex-1 overflow-hidden flex">
+        <main className="flex-1 overflow-hidden flex w-full">
           {view === "home" && (
             <HomeView
               status={status}

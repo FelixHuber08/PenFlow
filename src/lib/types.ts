@@ -23,12 +23,25 @@ export interface PlotConfig {
 
 export const SERVO_HOLD_PWM = 500;
 export const SERVO_HOLD_INTERVAL_MS = 1000;
-export const SERVO_HOLD_JOB_EVERY_LINES = 10;
+
+/** Fill / hatching style for raster (filled-shape) slicing. */
+export type FillPattern =
+  | "horizontal"  // ─── waagrechte Scanlinien
+  | "vertical"    // ││  senkrechte Scanlinien
+  | "diagonal"    // ╱   45° schräge Schraffur
+  | "crosshatch"  // ▦   Kreuzschraffur (waagrecht + senkrecht)
+  | "dots";       // ⠿   Punktraster
 
 export interface RasterConfig {
   lineStep: number;
   threshold: number;
   minRun: number;
+  /** Bridge over bright gaps up to this length (mm) inside a dark run, so
+   * anti-aliasing doesn't split one fill into many pen-up/down segments.
+   * 0 disables bridging. */
+  gapBridge: number;
+  /** Hatching / fill style. */
+  pattern: FillPattern;
 }
 
 export interface SvgTransform {

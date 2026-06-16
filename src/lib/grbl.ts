@@ -75,6 +75,14 @@ export function onJobError(cb: (msg: string) => void): Promise<UnlistenFn> {
   return listen<string>("grbl-job-error", (e) => cb(e.payload));
 }
 
+export function onJobStopped(cb: () => void): Promise<UnlistenFn> {
+  return listen("grbl-job-stopped", () => cb());
+}
+
 export function onDisconnected(cb: () => void): Promise<UnlistenFn> {
   return listen("grbl-disconnected", () => cb());
+}
+
+export function onDebug(cb: (msg: string) => void): Promise<UnlistenFn> {
+  return listen<string>("grbl-debug", (e) => cb(e.payload));
 }
